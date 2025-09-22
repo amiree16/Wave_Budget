@@ -1,0 +1,44 @@
+.sidebar {
+    width: 240px;
+    height: 100vh;
+    position: fixed;
+    background: #1e293b;
+    color: #f8fafc;
+    display: flex;
+    flex-direction: column;
+    padding: 24px 16px;
+}
+
+.brand h1 {
+    font-size: 20px;
+    margin-bottom: 32px;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: #cbd5e1;
+    padding: 10px 12px;
+    border-radius: 8px;
+    transition: background 0.2s ease;
+}
+
+.menu-item:hover {
+    background: #334155;
+}
+
+.menu-item.active {
+    background: #3b82f6;
+}
+
+.icon {
+    font-size: 18px;
+}
