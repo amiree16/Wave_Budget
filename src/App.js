@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, NavLink } from "react-router-do
 import Home from "./pages/Home";
 import Sidebar from "./components/Sidebar"
 import TablePage from "./pages/TablePage";
+import ManualEntryPage from "./pages/ManualEntryPage";
 
 function App() {
   return (
@@ -10,10 +11,12 @@ function App() {
         <div className="layout">
           <Sidebar/>
           <main className="content">
-            <Routes>
-              <Route path="/" element={<Home/>}/>
-                <Route path="/table" element={<TablePage />} />
-            </Routes>
+              <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/table" element={<TablePage />} />
+                  <Route path="/add-data/manual" element={<ManualEntryPage />} />
+              </Routes>
+
           </main>
         </div>
       </Router>

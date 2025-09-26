@@ -1,12 +1,18 @@
-import { NavLink } from "react-router-dom";
 import { FaHome, FaTable } from "react-icons/fa";
+import {FiPlusCircle} from "react-icons/fi";
 import "./Sidebar.css";
+import { useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 
 export default function Sidebar() {
+    const [isAddOpen, setIsAddOpen] = useState(false);
+
+    const location = useLocation();
+    const isAddActive = location.pathname.startsWith("/add-data");
     return (
         <aside className="sidebar">
             <div className="brand">
-                <h1>💼 Wave Notion</h1>
+                <h1>💼 Wave Notion Labs</h1>
             </div>
             <nav className="menu">
                 <NavLink to="/" end className="menu-item">
@@ -17,6 +23,24 @@ export default function Sidebar() {
                     <FaTable className="icon" />
                     <span>Table</span>
                 </NavLink>
+                <div
+                    className={`menu-item ${isAddActive ? "active" : ""}`}
+                    onClick={() => setIsAddOpen(prev => !prev)}
+                >
+                    <FiPlusCircle className="icon" />
+                    <span>Add Transaction</span>
+                </div>
+
+                {isAddOpen && (
+                    <div className="submenu">
+                        <NavLink to="/add-data/manual" className="submenu-item">
+                            Manual Entry
+                        </NavLink>
+                        <NavLink to="/add-data/csv" className="submenu-item">
+                            CSV Import
+                        </NavLink>
+                    </div>
+                )}
             </nav>
         </aside>
     );
