@@ -45,7 +45,7 @@
 .submenu {
     display: flex;
     flex-direction: column;
-    padding-left: 28px; /* indent */
+    padding-left: 28px;
     gap: 4px;
     margin-top: 4px;
 }
