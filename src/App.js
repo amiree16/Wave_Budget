@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import Sidebar from "./components/Sidebar"
 import TablePage from "./pages/TablePage";
 import ManualEntryPage from "./pages/ManualEntryPage";
+import CsvImportPage from "./pages/CsvImportPage";
 
 function App() {
   return (
@@ -15,8 +16,9 @@ function App() {
                   <Route path="/" element={<Home />} />
                   <Route path="/table" element={<TablePage />} />
                   <Route path="/add-data/manual" element={<ManualEntryPage />} />
-              </Routes>
+                  <Route path="/add-data/csv" element={<CsvImportPage />} />
 
+              </Routes>
           </main>
         </div>
       </Router>

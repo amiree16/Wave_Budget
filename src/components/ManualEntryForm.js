@@ -1,5 +1,6 @@
 import "./ManualEntryForm.css";
 import { useState } from "react";
+import axios from "axios";
 
 export default function ManualEntryForm() {
     const [form, setForm] = useState({
@@ -20,10 +21,34 @@ export default function ManualEntryForm() {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Submitted:", form); // înlocuiește cu POST către backend
+
+        try {
+            const response = await axios.post("http://localhost:3001/transactions", form);
+            console.log("Saved:", response.data);
+            alert("Tranzacția a fost salvată cu succes!");
+
+            setForm({
+                nume_cont_propriu: "",
+                cont_propriu: "",
+                data_inregistrarii: "",
+                suma: "",
+                moneda: "RON",
+                description: "",
+                tip: "Income",
+                nume_partener: "",
+                iban_partener: "",
+                bic_partener: "",
+                cod_banca_partener: "",
+            });
+
+        } catch (error) {
+            console.error("Eroare la trimiterea datelor:", error);
+            alert("A apărut o eroare. Încearcă din nou.");
+        }
     };
+
 
     return (
         <form className="manual-form" onSubmit={handleSubmit}>
