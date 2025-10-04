@@ -30,8 +30,9 @@ export const columns = [
     }),
     columnHelper.accessor("moneda", {
         header: "Monedă",
-        cell: info => info.getValue().code,
+        cell: info => info.getValue(),
     }),
+
     columnHelper.accessor("description", {
         header: "Descriere",
     }),
