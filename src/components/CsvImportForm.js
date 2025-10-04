@@ -1,5 +1,3 @@
-// src/components/CsvImportForm.js
-
 import Papa from "papaparse";
 import axios from "axios";
 import { useState } from "react";
@@ -33,12 +31,17 @@ export default function CsvImportForm() {
                 try {
                     for (const record of records) {
                         // Inlocuim "," cu "." pentru ca parseFloat nu accepta virgula, doar punct
-                        const rawAmount = (record["Suma"] || "").replace(",", ".").trim();
+                        //Transformam formatul din 1.000,23 in 1000.23
+                        const rawAmount = (record["Suma"] || "")
+                            .replace(/\./g, "")
+                            .replace(",", ".")
+                            .trim();
                         const suma = parseFloat(rawAmount);
                         const tip = isNaN(suma) ? "Unknown" : (suma >= 0 ? "Income" : "Expense");
 
                         const combinedText = `${record["Descrierea tranzactiei"] || ""} ${record["Nume partener"] || ""}`;
                         const { categorie, subcategorie } = categorizeTransaction(tip, combinedText);
+
 
                         // Trimitem tranzactiile catre json-server
                         await axios.post("http://localhost:3001/transactions", {

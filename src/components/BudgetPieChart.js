@@ -1,38 +1,58 @@
-import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts';
+import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
 const RADIAN = Math.PI / 180;
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#AF19FF', '#FF4567'];
 
-const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
+const renderPercentageLabelOnly = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
+    if (percent === 0) return null;
+
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-    const x = cx + radius * Math.cos(-(midAngle ?? 0) * RADIAN);
-    const y = cy + radius * Math.sin(-(midAngle ?? 0) * RADIAN);
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
     return (
-        <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
-            {`${((percent ?? 1) * 100).toFixed(0)}%`}
+        <text
+            x={x}
+            y={y}
+            fill="white"
+            textAnchor={x > cx ? 'start' : 'end'}
+            dominantBaseline="central"
+            style={{ fontSize: '12px' }}
+        >
+            {`${(percent * 100).toFixed(0)}%`}
         </text>
     );
 };
 
-export default function BudgetPieChart({data}) {
+export default function BudgetPieChart({ data }) {
+    const filteredData = data.filter(entry => entry.value > 0);
+
     return (
         <ResponsiveContainer width="100%" height={300}>
-            <PieChart width={400} height={400}>
+            <PieChart>
                 <Pie
-                    data={data}
+                    data={filteredData}
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    label={renderCustomizedLabel}
-                    outerRadius={80}
+                    label={renderPercentageLabelOnly}
+                    outerRadius={90}
                     fill="#8884d8"
                     dataKey="value"
+                    nameKey="name"
                 >
-                    {data.map((entry, index) => (
-                        <Cell key={`cell-${entry.name}`} fill={COLORS[index % COLORS.length]} />
+                    {filteredData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                 </Pie>
+
+                <Tooltip
+                    formatter={(value, name) => [`${Math.round(value)} RON`, name]}
+                    contentStyle={{ backgroundColor: "#f9f9f9", borderRadius: "8px", border: "none", fontSize: "14px" }}
+                    itemStyle={{ color: "#333" }}
+                />
+
+                <Legend verticalAlign="bottom" height={36} />
             </PieChart>
         </ResponsiveContainer>
     );
