@@ -5,7 +5,8 @@ import Sidebar from "./components/Sidebar"
 import TablePage from "./pages/TablePage";
 import ManualEntryPage from "./pages/ManualEntryPage";
 import CsvImportPage from "./pages/CsvImportPage";
-
+import Expenses from "./pages/Expenses";
+import Income from "./pages/Income";
 function App() {
   return (
       <Router>
@@ -17,6 +18,8 @@ function App() {
                   <Route path="/table" element={<TablePage />} />
                   <Route path="/add-data/manual" element={<ManualEntryPage />} />
                   <Route path="/add-data/csv" element={<CsvImportPage />} />
+                  <Route path="/expenses" element={<Expenses/>}/>
+                  <Route path="/income" element={<Income/>}/>
 
               </Routes>
           </main>

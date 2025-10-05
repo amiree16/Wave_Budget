@@ -1,4 +1,4 @@
-import { FaHome, FaTable } from "react-icons/fa";
+import {FaArrowDown, FaArrowUp, FaExpeditedssl, FaHome, FaTable} from "react-icons/fa";
 import {FiPlusCircle} from "react-icons/fi";
 import "./Sidebar.css";
 import { useState } from "react";
@@ -23,6 +23,14 @@ export default function Sidebar() {
                     <FaTable className="icon" />
                     <span>Table</span>
                 </NavLink>
+                <NavLink to="/expenses" end className="menu-item">
+                    <FaArrowDown className="icon" />
+                    <span>Expenses</span>
+                </NavLink>
+                <NavLink to="/income" end className="menu-item">
+                    <FaArrowUp className="icon" />
+                    <span>Income</span>
+                </NavLink>
                 <div
                     className={`menu-item ${isAddActive ? "active" : ""}`}
                     onClick={() => setIsAddOpen(prev => !prev)}
@@ -41,6 +49,8 @@ export default function Sidebar() {
                         </NavLink>
                     </div>
                 )}
+
+
             </nav>
         </aside>
     );
