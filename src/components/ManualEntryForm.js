@@ -1,7 +1,7 @@
 import "./ManualEntryForm.css";
 import { useState } from "react";
 import axios from "axios";
-
+import { encryptData } from "../utils/Encryption";
 export default function ManualEntryForm() {
     const [form, setForm] = useState({
         nume_cont_propriu: "",
@@ -25,13 +25,19 @@ export default function ManualEntryForm() {
         e.preventDefault();
 
         try {
-            const response = await axios.post("http://localhost:3001/transactions", form);
+            const encryptedForm = {
+                ...form,
+                cont_propriu: encryptData(form.cont_propriu),
+                iban_partener: encryptData(form.iban_partener),
+            };
+
+            const response = await axios.post("http://localhost:3001/transactions", encryptedForm);
             console.log("Saved:", response.data);
             alert("Tranzacția a fost salvată cu succes!");
 
             setForm({
                 nume_cont_propriu: "",
-                cont_propriu: "",
+                cont_propriu: encryptData(form.cont_propriu),
                 data_inregistrarii: "",
                 suma: "",
                 moneda: "RON",

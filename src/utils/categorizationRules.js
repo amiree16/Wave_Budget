@@ -3,26 +3,39 @@ const categorizationRules = [
         keywords: ["omv", "petrom", "rompetrol", "mol", "lukoil"],
         tip: "Expense",
         categorie: "Business",
-        subcategorie: "Fuel"
+        subcategorie: "Fuel",
     },
     {
         keywords: ["apple pay"],
         tip: "Expense",
         categorie: "Personal",
-        subcategorie: "Personal Expense"
+        subcategorie: "Personal Expense",
     },
     {
         keywords: ["microsoft", "google", "aws", "atlassian"],
         tip: "Expense",
         categorie: "Business",
-        subcategorie: "Software"
+        subcategorie: "Software",
     },
     {
         keywords: ["salariat"],
         tip: "Expense",
         categorie: "Business",
-        subcategorie: "Wages"
-    }
+        subcategorie: "Wages",
+    },
+
+    {
+        keywords: ["client", "payment", "invoice"],
+        tip: "Income",
+        categorie: "Business",
+        subcategorie: "Client Income",
+    },
+    {
+        keywords: ["Dividende", "dividend", "profit share"],
+        tip: "Income",
+        categorie: "Business",
+        subcategorie: "Dividends",
+    },
 ];
 
 export function categorizeTransaction(tip, text) {
@@ -35,7 +48,7 @@ export function categorizeTransaction(tip, text) {
             if (lowerText.includes(keyword)) {
                 return {
                     categorie: rule.categorie,
-                    subcategorie: rule.subcategorie
+                    subcategorie: rule.subcategorie,
                 };
             }
         }
@@ -43,6 +56,6 @@ export function categorizeTransaction(tip, text) {
 
     return {
         categorie: tip === "Expense" ? "Business" : "Uncategorized",
-        subcategorie: tip === "Expense" ? "Other" : "Uncategorized"
+        subcategorie: tip === "Expense" ? "Other" : "Uncategorized",
     };
 }

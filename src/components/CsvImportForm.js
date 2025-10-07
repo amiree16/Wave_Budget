@@ -2,7 +2,7 @@ import Papa from "papaparse";
 import axios from "axios";
 import { useState } from "react";
 import { categorizeTransaction } from "../utils/categorizationRules";
-
+import { encryptData } from "../utils/Encryption";
 export default function CsvImportForm() {
     const [csvFile, setCsvFile] = useState(null);
     const [message, setMessage] = useState("");
@@ -14,6 +14,7 @@ export default function CsvImportForm() {
 
     const handleUpload = () => {
         if (!csvFile) return;
+
 
         //Folosim papa.parse ca sa transformam CSV_ul in obiecte JavaScript
         Papa.parse(csvFile, {
@@ -42,14 +43,16 @@ export default function CsvImportForm() {
                         const combinedText = `${record["Descrierea tranzactiei"] || ""} ${record["Nume partener"] || ""}`;
                         const { categorie, subcategorie } = categorizeTransaction(tip, combinedText);
 
+                        const contPropriuEncrypted = encryptData(record["Cont propriu"] || "");
+                        const ibanPartenerEncrypted = encryptData(record["IBAN partener"] || "");
 
                         // Trimitem tranzactiile catre json-server
                         await axios.post("http://localhost:3001/transactions", {
                             nume_cont_propriu: record["Nume cont propriu"] || "",
-                            cont_propriu: record["Cont propriu"] || "",
+                            cont_propriu: contPropriuEncrypted,
                             data_inregistrarii: record["Data inregistrarii"] || "",
                             nume_partener: record["Nume partener"] || "",
-                            iban_partener: record["IBAN partener"] || "",
+                            iban_partener: ibanPartenerEncrypted,
                             cod_bic_partener: record["Cod BIC partener"] || "",
                             cont_partener: record["Cont partener"] || "",
                             cod_banca_partener: record["Cod banca parte"] || "",

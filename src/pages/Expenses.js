@@ -3,18 +3,30 @@ import axios from "axios";
 import BudgetPieChart from "../components/BudgetPieChart";
 
 import CustomLineChart from "../components/CustomLineChart";
-
+import YearFilter from "../components/YearFilter";
+import { extractYears, filterByYear } from "../utils/yearUtils";
 
 export default function Expenses() {
     const [transactions, setTransactions] = useState([]);
+    const [selectedYear, setSelectedYear] = useState(2025);
+    const [availableYears, setAvailableYears] = useState([]);
 
     useEffect(() => {
-        axios.get("http://localhost:3001/transactions")
-            .then(res => setTransactions(res.data || []))
-            .catch(err => console.error("Error fetching transactions:", err));
+        axios
+            .get("http://localhost:3001/transactions")
+            .then((res) => {
+                const data = res.data || [];
+                setTransactions(data);
+
+                setAvailableYears(extractYears(data));
+            })
+            .catch((err) => console.error("Error fetching transactions:", err));
     }, []);
 
-    const expenses = transactions.filter(tx => tx.tip === "Expense");
+    const expenses = filterByYear(
+        transactions.filter((tx) => tx.tip === "Expense"),
+        selectedYear
+    );
 
     const total = expenses.reduce((acc, tx) => acc + Math.abs(tx.suma), 0);
     const average = expenses.length ? total / expenses.length : 0;
@@ -50,6 +62,13 @@ export default function Expenses() {
 
     return (
         <div className="expenses-page">
+            <h1 className="page-title">Cheltuieli ({selectedYear})</h1>
+
+            <YearFilter
+                selectedYear={selectedYear}
+                availableYears={availableYears}
+                onChange={setSelectedYear}
+            />
             <h1 className="page-title">Cheltuieli</h1>
 
             <div className="stats-grid">

@@ -1,70 +1,85 @@
-# Getting Started with Create React App
+# Wave Notion Labs Budget App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+O aplicatie interna de gestionare a bugetului, construita cu **React** si **json-server**.  
+Permite importul de fisiere CSV cu tranzactii, criptarea datelor sensibile (IBAN-uri) si vizualizarea statisticilor financiare.
 
-## Available Scripts
+## ⚙️ Instalare si rulare
 
-In the project directory, you can run:
+1. Cloneaza proiectul:
+   ```bash
+   git clone https://github.com/utilizator/wave-budget.git
+   cd wave-budget/frontend
 
-### `npm start`
+2. Instalam dependensele:
+   ```npm install ```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+3. Pornim aplicatia si json-serverul:
+   ```npm start ```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🛠️ Tehnologii folosite
 
-### `npm run build`
+- **React.js** – interfaaa utilizatorului
+- **json-server** – backend mock pentru stocarea tranzactiilor
+- **CryptoJS** – criptare/decriptare simpla a datelor sensibile
+- **Papaparse** – import fisiere CSV
+- **Axios** – comunicare cu serverul
+- **Recharts** – generare de grafice
+- **CSS / Flexbox** – layout si stilizare
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 🚀 Funcționalități
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 📁 Import fisiere CSV cu tranzactii
+Am folosit **PapaParse** pentru a citi si transforma continutul fisierelor CSV in obiecte JavaScript.  
+Datele sunt parcurse rand cu rand, iar pentru fiecare inregistrare se face o cerere **POST** catre `json-server` prin **Axios**.  
+Inainte de trimitere, valorile numerice sunt curatate si transformate in format standard (ex: `1.000,50` → `1000.50`).
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+### 🔐 Criptare simpla pentru campuri sensibile (IBAN, conturi proprii)
+Campurile `cont_propriu` si `iban_partener` sunt criptate inainte de a fi salvate in baza de date folosind **CryptoJS** si algoritmul **AES**.  
+La afisarea in frontend, acestea sunt decriptate temporar pentru a fi lizibile in interfata.  
+Cheia secreta este stocata local doar pentru demonstratie (proof of concept).
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 💼 Categorizare automata a tranzactiilor dupa cuvinte cheie
+Am implementat o logica de categorizare in fisierul `categorizationRules.js`.  
+Aceasta cauta anumite **cuvinte cheie** in descrierea sau numele partenerului (ex: `omv`, `google`, `client`, `dividende`) si atribuie automat o **categorie** si o **subcategorie** pentru fiecare tranzactie.  
+Daca nu exista potriviri, tranzactia este incadrata la `Other` sau `Uncategorized`.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### 📊 Dashboard interactiv cu grafice lunare si anuale
+Pagina principala (**Home**) calculeaza veniturile, cheltuielile si profitul net pe baza datelor din `json-server`.  
+Am folosit **Recharts** pentru a genera grafice dinamice care compara veniturile si cheltuielile pe luni.  
+Datele sunt grupate pe baza lunii si anului folosind o functie personalizata `groupByMonth()`.
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### 💵 Pagini dedicate pentru venituri, cheltuieli si tranzactii
+Aplicatia are pagini separate pentru **Income**, **Expenses** si **Transactions**.  
+Fiecare pagina foloseste **Axios** pentru a prelua datele din server, apoi afiseaza rezultatele sub forma de tabele si grafice.  
+Pe paginile de venituri si cheltuieli sunt calculate automat totalurile, mediile si subcategoriile principale.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
+### 📅 Filtrare dupa an
+Am adaugat un **YearFilter** reutilizabil care permite filtrarea tranzactiilor in functie de anul selectat.  
+Anul curent este selectat automat, iar lista de ani disponibili este extrasa din datele existente.  
+Filtrarea se aplica atat in dashboard, cat si in paginile pentru venituri si cheltuieli.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-### Analyzing the Bundle Size
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## ⚠️ Securitate și limitări
 
-### Making a Progressive Web App
+- Criptarea este doar o **demonstratie** (proof of concept).  
+  Intr-o aplicatie reala, cheia secreta nu trebuie stocata în frontend.
+- Fișierele CSV nu sunt salvate permanent, doar procesate local.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-### Advanced Configuration
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-### Deployment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)

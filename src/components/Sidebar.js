@@ -1,8 +1,17 @@
-import {FaArrowDown, FaArrowUp, FaExpeditedssl, FaHome, FaTable} from "react-icons/fa";
+import {
+    FaArrowDown,
+    FaArrowUp,
+    FaExpeditedssl,
+    FaHome,
+    FaMoneyBillWave,
+    FaMoneyBillWaveAlt,
+    FaTable
+} from "react-icons/fa";
 import {FiPlusCircle} from "react-icons/fi";
 import "./Sidebar.css";
 import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
+import {FaMoneyBillTrendUp} from "react-icons/fa6";
 
 export default function Sidebar() {
     const [isAddOpen, setIsAddOpen] = useState(false);
@@ -12,7 +21,7 @@ export default function Sidebar() {
     return (
         <aside className="sidebar">
             <div className="brand">
-                <h1>💼 Wave Notion Labs</h1>
+                <h1>Wave Notion Labs</h1>
             </div>
             <nav className="menu">
                 <NavLink to="/" end className="menu-item">
@@ -24,11 +33,11 @@ export default function Sidebar() {
                     <span>Table</span>
                 </NavLink>
                 <NavLink to="/expenses" end className="menu-item">
-                    <FaArrowDown className="icon" />
+                    <FaMoneyBillWave className="icon" />
                     <span>Expenses</span>
                 </NavLink>
                 <NavLink to="/income" end className="menu-item">
-                    <FaArrowUp className="icon" />
+                    <FaMoneyBillTrendUp className="icon" />
                     <span>Income</span>
                 </NavLink>
                 <div

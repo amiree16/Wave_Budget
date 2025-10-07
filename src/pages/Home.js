@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import SummaryCard from "../components/SummaryCard";
 import MonthlyBarChart from "../components/MonthlyBarChart";
-
+import YearFilter from "../components/YearFilter";
+import { extractYears, filterByYear } from "../utils/yearUtils";
+//Extragem numerele din data
 function parseCustomDate(dateStr) {
     if (!dateStr) return null;
 
@@ -15,8 +17,12 @@ function groupByMonth(transactions) {
 
     transactions.forEach((tx) => {
         const date = parseCustomDate(tx.data_inregistrarii);
-        if (!date || isNaN(date)) return; // ignora toate datele invalide
+        if (!date || isNaN(date)) return;
 
+        /*
+        Construim o cheie pt fiecare luna de forma yyyy-mm, si ne asiguram ca avem mereu 2 cifre ex "08"
+        Adaugam 1 pt ca numaratoarea lunilor incepe de la pozitia 0
+         */
         const key = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, "0")}`;
 
         if (!map[key]) {
@@ -40,31 +46,47 @@ function groupByMonth(transactions) {
 
 export default function Home() {
     const [transactions, setTransactions] = useState([]);
+    const [selectedYear, setSelectedYear] = useState(2025);
+    const [availableYears, setAvailableYears] = useState([]);
+
 
     useEffect(() => {
-        axios.get("http://localhost:3001/transactions")
-            .then(res => setTransactions(res.data))
-            .catch(err => console.error("Error fetching data", err));
+        axios
+            .get("http://localhost:3001/transactions")
+            .then((res) => {
+                setTransactions(res.data);
+                setAvailableYears(extractYears(res.data));
+            })
+            .catch((err) => console.error("Error fetching data", err));
     }, []);
+
 
     const validTransactions = Array.isArray(transactions) ? transactions : [];
 
-    const totalIncome = validTransactions
+    const filteredTransactions = filterByYear(validTransactions,selectedYear)
+
+    const totalIncome = filteredTransactions
         .filter(t => t.tip === "Income")
         .reduce((sum, t) => sum + t.suma, 0);
 
-    const totalExpenses = validTransactions
+    const totalExpenses = filteredTransactions
         .filter(t => t.tip === "Expense")
         .reduce((sum, t) => sum + Math.abs(t.suma), 0);
 
 
     const netProfit = totalIncome - totalExpenses;
 
-    const monthlyData = groupByMonth(validTransactions);
+    const monthlyData = groupByMonth(filteredTransactions);
 
     return (
         <div>
             <h1 className="page-title">Dashboard</h1>
+
+            <YearFilter
+                selectedYear={selectedYear}
+                availableYears={availableYears}
+                onChange={setSelectedYear}
+            />
 
             <div className="summary-container">
                 <SummaryCard title="Venituri" value={totalIncome} color="#10b981" />
@@ -73,7 +95,7 @@ export default function Home() {
             </div>
 
             <div className="card" style={{ marginTop: "24px" }}>
-                <h3>Venituri vs Cheltuieli pe Luni</h3>
+                <h3>Venituri vs Cheltuieli ({selectedYear})</h3>
                 <MonthlyBarChart data={monthlyData} />
             </div>
         </div>
